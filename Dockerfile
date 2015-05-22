@@ -7,6 +7,7 @@ FROM ubuntu
 # File Author / Maintainer                                                                                                                                                                                   
 MAINTAINER Frank Wagener   <docker@dapor.de>
                                                        
+
 # Update the repository sources list                                                                                                                                                                         
 RUN apt-get update -q                                                                                                                                                                                        
 RUN apt-get upgrade -qy                                                                                                                                                                                      
