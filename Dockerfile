@@ -20,8 +20,8 @@ RUN echo "ulimit -n 10240" >> /run_kerio.sh
 RUN echo "/opt/kerio/mailserver/mailserver /opt/kerio/mailserver" >> /run_kerio.sh                                                                                                                            
 RUN chmod +x /run_kerio.sh                                                                                                                                                                                   
 ##################### INSTALLATION END #####################                                                                                                                                                 
-# Expose the default port                                                                                                                                                                                    
-EXPOSE 4040 80 443 25                                                                                                                                                                                        
+# Expose the admin default port                                                                                                                                                                                    
+EXPOSE 4040                                                                                                                                                                                         
                                                                                                                                                                                                              
 # Set default container command                                                                                                                                                                              
 #ENTRYPOINT /opt/kerio/mailserver/mailserver /opt/kerio/mailserver                                                                                                                                           
