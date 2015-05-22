@@ -12,7 +12,7 @@ USE AT YOUR OWN RISK
 Get latest build from Docker:
 
 ```bash
-docker pull sameersbn/apt-cacher-ng:latest
+docker pull dapor/docker-kerio-connect
 ```
 
 Or build it by yourself:
