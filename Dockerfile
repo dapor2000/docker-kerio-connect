@@ -10,7 +10,7 @@ MAINTAINER Frank Wagener
 # Update the repository sources list                                                                                                                                                                         
 RUN apt-get update -q                                                                                                                                                                                        
 RUN apt-get upgrade -qy                                                                                                                                                                                      
-RUN apt-get install lsof sysstat                                                                                                                                                                             
+RUN apt-get install lsof sysstat   -qy
                                                                                                                                                                                                              
                                                                                                                                                                                                              
 RUN wget http://download.kerio.com/dwn/kerio-connect-linux-64bit.deb                                                                                                                                         
