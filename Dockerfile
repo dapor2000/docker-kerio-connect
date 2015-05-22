@@ -11,7 +11,7 @@ MAINTAINER Frank Wagener
 RUN apt-get update -q                                                                                                                                                                                        
 RUN apt-get upgrade -qy                                                                                                                                                                                      
 RUN apt-get install lsof sysstat wget  -qy
-RUN wget http://download.kerio.com/dwn/kerio-connect-linux-64bit.deb                                                                                                                                         
+RUN wget –quiet http://download.kerio.com/dwn/kerio-connect-linux-64bit.deb                                                                                                                                         
 ################## BEGIN INSTALLATION ######################                                                                                                                                                 
 RUN dpkg -i kerio-connect-linux-64bit.deb                                                                                                                                                                    
 RUN echo "ulimit -c unlimited"  > /run_kerio.sh                                                                                                                                                               
