@@ -12,7 +12,9 @@ MAINTAINER Frank Wagener <docker@dapor.de>
 RUN apt-get update -q                                                                                                                                                                                        
 RUN apt-get upgrade -qy                                                                                                                                                                                      
 RUN apt-get install lsof sysstat wget  -qy
-RUN wget –q http://download.kerio.com/dwn/kerio-connect-linux-64bit.deb   
+RUN echo "wget –q http://download.kerio.com/dwn/kerio-connect-linux-64bit.deb   " > dl.sh
+RUN chmod +x 
+RUN ./dl.sh
 ################## BEGIN INSTALLATION #########################
 RUN dpkg -i kerio-connect-linux-64bit.deb 
 RUN echo "ulimit -c unlimited"  > /run_kerio.sh                                                                                                   
