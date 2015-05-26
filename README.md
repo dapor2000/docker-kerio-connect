@@ -18,9 +18,9 @@ docker pull dapor/docker-kerio-connect
 Or build it by yourself:
 
 ```bash
-$ git clone https://github.com/clue/docker-kerio-connect.git
-$ cd docker-kerio-connect
-$ sudo docker build -t docker-kerio-connect .
+ git clone https://github.com/clue/docker-kerio-connect.git
+ cd docker-kerio-connect
+ sudo docker build -t docker-kerio-connect .
 ```
 
 ### Run in background
