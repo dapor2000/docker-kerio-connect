@@ -5,7 +5,7 @@
 FROM ubuntu
 
 # File Author / Maintainer                                                                                                                                                                                   
-MAINTAINER Frank Wagener   <docker@dapor.de>
+MAINTAINER Frank Wagener <docker@dapor.de>
                                                        
 
 # Update the repository sources list                                                                                                                                                                         
