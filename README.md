@@ -26,7 +26,7 @@ Or build it by yourself:
 ### Run in background
 
 ```bash
-$ sudo docker run -d -p 4040:4040 -t docker-kerio-connect 
+$ sudo docker run -d -p 4040:4040 -v /#YOUR_KERIO_BACKUP:/backup -t docker-kerio-connect 
 ```
 
 ### Configure
