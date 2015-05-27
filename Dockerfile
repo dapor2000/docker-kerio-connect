@@ -24,7 +24,7 @@ RUN echo "/opt/kerio/mailserver/kmsrecovery /backup/" >> /run_kerio.sh
 RUN echo "/opt/kerio/mailserver/mailserver /opt/kerio/mailserver" >> /run_kerio.sh                                                                                            
 RUN chmod +x /run_kerio.sh                                                                                                     
 ##################### INSTALLATION END #####################                                                                                                                                                 
-# Expose the admin default port                                                                                                                                                                                    
+# Expose the default port  oly 4040 is nessecary for admin access                                                                                                                                                                                  
 EXPOSE 4040  25 465 587 110 995 143 993 119 563 389 636 80 443 5222 5223                                                                                                                                                                                       
 VOLUME /backup
 # Set default container command                                                                                                                                                                              
