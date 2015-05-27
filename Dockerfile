@@ -19,13 +19,14 @@ RUN ./dl.sh
 RUN dpkg -i kerio-connect-linux-64bit.deb 
 RUN echo "ulimit -c unlimited"  > /run_kerio.sh                                                                                                   
 RUN echo "ulimit -s 2048 "   >> /run_kerio.sh                                                                                                   
-RUN echo "ulimit -n 10240" >> /run_kerio.sh                                                                                        
+RUN echo "ulimit -n 10240" >> /run_kerio.sh        
+RUN echo "/opt/kerio/mailserver/kmsrecovery /backup/" >> /run_kerio.sh
 RUN echo "/opt/kerio/mailserver/mailserver /opt/kerio/mailserver" >> /run_kerio.sh                                                                                            
 RUN chmod +x /run_kerio.sh                                                                                                     
 ##################### INSTALLATION END #####################                                                                                                                                                 
 # Expose the admin default port                                                                                                                                                                                    
 EXPOSE 4040                                                                                                                                                                                         
-                                                                                                                                                                                                             
+WORKDIR /backup
 # Set default container command                                                                                                                                                                              
 #ENTRYPOINT /opt/kerio/mailserver/mailserver /opt/kerio/mailserver                                                                                                                                           
 ENTRYPOINT /run_kerio.sh                                                                                                                                                                                     
