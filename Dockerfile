@@ -26,7 +26,7 @@ RUN chmod +x /run_kerio.sh
 ##################### INSTALLATION END #####################                                                                                                                                                 
 # Expose the admin default port                                                                                                                                                                                    
 EXPOSE 4040                                                                                                                                                                                         
-WORKDIR /backup
+VOLUME /backup
 # Set default container command                                                                                                                                                                              
 #ENTRYPOINT /opt/kerio/mailserver/mailserver /opt/kerio/mailserver                                                                                                                                           
 ENTRYPOINT /run_kerio.sh                                                                                                                                                                                     
