@@ -32,7 +32,7 @@ RUN chmod +x /kerio-restore.sh
 ##################### INSTALLATION END #####################                                                                                                                                                 
 # Expose the default port  only 4040 is nessecary for admin access                                                                                                                                           
                                                                                                                                                                                                              
-EXPOSE 4040  25 465 587 110 995 143 993 119 563 389 636 80 443 5222 5223                                                                                                                                     
+EXPOSE 4040  22 25 465 587 110 995 143 993 119 563 389 636 80 443 5222 5223                                                                                                                                     
                                                                                                                                                                                                              
 VOLUME /backup                                                                                                                                                                                               
 # Set default container command                                                                                                                                                                              
