@@ -15,7 +15,7 @@ Get latest build from Docker:
 docker pull dapor/docker-kerio-connect:latest
 ```
 
-If you want to run Kerio inside Synology-Docker use this:
+If you want to run Kerio inside Synology-Docker use this [Container qualified for Synology NAS ]:
 
 ```bash
 docker pull dapor/docker-kerio-connect:Synology
