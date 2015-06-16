@@ -17,17 +17,14 @@ RUN chmod +x dl.sh
 RUN ./dl.sh                                                                                                                                                                                                  
 ################## BEGIN INSTALLATION #########################                                                                                                                                              
 RUN dpkg -i kerio-connect-linux-64bit.deb                                                                                                                                                                    
-RUN echo "ulimit -c unlimited"  > /run_kerio.sh                                                                                                                                                             
-RUN echo "ulimit -s 2048 "   >> /run_kerio.sh                                                                                                                                                               
-RUN echo "ulimit -n 10240" >> /run_kerio.sh  
-RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh                                                                                                                                    
-RUN echo "/opt/kerio/mailserver/mailserver /opt/kerio/mailserver" >> /run_kerio.sh                                                                                                                           
-COPY sleep.sh /tmp/      
+RUN ulimit -c unlimited                                                                                                                                                         
+RUN ulimit -s 2048                                                                                                                                                             
+RUN ulimit -n 10240
+RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh                                                                                                       
+    
 COPY /etc/supervisor/conf.d/supervisord.conf  /etc/supervisor/conf.d/supervisord.conf 
-RUN chmod +x /tmp/sleep.sh                                                                                                                                                                                   
-RUN echo "/tmp/sleep.sh" >> /run_kerio.sh                                                                                                                                                                    
+                                                                                                                                                                               
                                                                                                                                                                                                              
-RUN chmod +x /run_kerio.sh                                                                                                                                                                                   
 RUN chmod +x /kerio-restore.sh                                                                                                                                                                               
 ##################### INSTALLATION END #####################                                                                                                                                                 
 # Expose the default port  only 4040 is nessecary for admin access                                                                                                                                           
@@ -37,6 +34,5 @@ EXPOSE 4040  25 465 587 110 995 143 993 119 563 389 636 80 443 5222 5223
 VOLUME /backup          
 VOLUME /mailserver/data   
 # Set default container command                                                                                                                                                                              
-#ENTRYPOINT /opt/kerio/mailserver/mailserver /opt/kerio/mailserver                                                                                                                                           
-#ENTRYPOINT /run_kerio.sh    
-ENTRYPOINT /user/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+ENTRYPOINT ["/usr/bin/supervisord"]                                                                                                                                                                          
+CMD ["-c", "/etc/supervisor/conf.d/supervisord.conf"] 
