@@ -1,249 +1,249 @@
-#!/bin/sh                                                                                                                                                                                                    
-### entry for chkconfig on Redhat and Debian or for sysv-rc-conf on Ubuntu.                                                                                                                                  
-### RPM instalator uses it                                                                                                                                                                                   
-#                                                                                                                                                                                                            
-# kerio-connect  Script to start and stop Kerio Connect                                                                                                                                                      
-#                                                                                                                                                                                                            
-# chkconfig: 2345 79 30                                                                                                                                                                                      
-# description: Kerio Connect                                                                                                                                                                                 
-# processname: mailserver                                                                                                                                                                                    
-# pidfile: /var/run/kms.pid                                                                                                                                                                                  
-#                                                                                                                                                                                                            
-### entry for update-rc.d on Debian and Ubuntu                                                                                                                                                               
-### DEB instalator uses it                                                                                                                                                                                   
-#                                                                                                                                                                                                            
-### BEGIN INIT INFO                                                                                                                                                                                          
-# Provides: kerio-connect mail-transport-agent                                                                                                                                                               
-# Required-Start: $local_fs $network $time                                                                                                                                                                   
-# Required-Stop: $local_fs $network $time                                                                                                                                                                    
-# Default-Start: 2 3 4 5                                                                                                                                                                                     
-# Default-Stop: 0 1 6                                                                                                                                                                                        
-# Short-Description: Script to start and stop Kerio Connect                                                                                                                                                  
-### END INIT INFO                                                                                                                                                                                            
-                                                                                                                                                                                                             
-                                                                                                                                                                                                             
-DESC="Kerio Connect"           # this name is write to console                                                                                                                                               
-MAINDIR=/opt/kerio/mailserver  # pwd                                                                                                                                                                         
-NAME=mailserver                # processname                                                                                                                                                                 
-PIDFILE=/var/run/kms.pid       # pidfile                                                                                                                                                                     
-DELAY=4                        # delay in active waiting (in start and stop)                                                                                                                                 
-STARTTIMEOUT=30                # max waiting on start (second)                                                                                                                                               
-STOPTIMEOUT=300                # max waiting on stop (second), 300s is recommend minimun                                                                                                                     
-EXEC=$MAINDIR/$NAME                                                                                                                                                                                          
-                                                                                                                                                                                                             
-INIT_FUNCTIONS=                                                                                                                                                                                              
-if [ -f /lib/lsb/init-functions ]; then                                                                                                                                                                      
-        . /lib/lsb/init-functions                                                                                                                                                                            
-        INIT_FUNCTIONS=lsb                                                                                                                                                                                   
-elif [ -f /etc/rc.d/init.d/functions ]; then                                                                                                                                                                 
-        . /etc/rc.d/init.d/functions                                                                                                                                                                         
-        INIT_FUNCTIONS=rhel                                                                                                                                                                                  
-else                                                                                                                                                                                                         
-        . /lib/lsb/init-functions                                                                                                                                                                            
-fi                                                                                                                                                                                                           
-                                                                                                                                                                                                             
-# Make sure Kerio Connect is started with system locale                                                                                                                                                      
-if [ -r /etc/default/locale ]; then   # ubuntu|debian                                                                                                                                                        
-        . /etc/default/locale                                                                                                                                                                                
-        export LANG                                                                                                                                                                                          
-        export LC_ALL=$LANG                                                                                                                                                                                  
-elif [ -r /etc/sysconfig/i18n ]; then # CentOS                                                                                                                                                               
-        . /etc/sysconfig/i18n                                                                                                                                                                                
-        export LANG                                                                                                                                                                                          
-fi                                                                                                                                                                                                           
-                                                                                                                                                                                                             
-unset DISTRIB_ID                                                                                                                                                                                             
-[ -r /etc/lsb-release ] && . /etc/lsb-release                                                                                                                                                                
-                                                                                                                                                                                                             
-                                                                                                                                                                                                             
-k_log_success_msg() {                                                                                                                                                                                        
-        if [ "$INIT_FUNCTIONS" = "rhel" ]; then                                                                                                                                                              
-                echo -n "$@"                                                                                                                                                                                 
-                success                                                                                                                                                                                      
-                echo                                                                                                                                                                                         
-        else                                                                                                                                                                                                 
-                log_success_msg $@                                                                                                                                                                           
-        fi                                                                                                                                                                                                   
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-k_log_failure_msg() {                                                                                                                                                                                        
-        if [ "$INIT_FUNCTIONS" = "rhel" ]; then                                                                                                                                                              
-                echo -n "$@"                                                                                                                                                                                 
-                failure                                                                                                                                                                                      
-                echo                                                                                                                                                                                         
-        else                                                                                                                                                                                                 
-                log_failure_msg $@                                                                                                                                                                           
-        fi                                                                                                                                                                                                   
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-# Remove pidfile if process is no longer running (probably crashed)                                                                                                                                          
-k_pidfileclean() {                                                                                                                                                                                           
-        if [ -z "`pidof $NAME`" ] && [ -e $PIDFILE ]; then                                                                                                                                                   
-                rm -f $PIDFILE                                                                                                                                                                               
-                echo                                                                                                                                                                                         
-        fi                                                                                                                                                                                                   
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-# Waiting to complete start                                                                                                                                                                                  
-k_wait_until_start() {                                                                                                                                                                                       
-        local delay                                                                                                                                                                                          
-                                                                                                                                                                                                             
-        sleep 1 # min waiting                                                                                                                                                                                
-        delay=$STOPTIMEOUT                                                                                                                                                                                   
-        while [ $delay -gt 0 ] && [ -n "`pidof $NAME`" ] && [ ! -e $PIDFILE ]; do                                                                                                                            
-                sleep $DELAY                                                                                                                                                                                 
-                delay=$(( $delay - $DELAY ))                                                                                                                                                                 
-        done                                                                                                                                                                                                 
-        [ -z "`pidof $NAME`" ] && return 1 || return 0                                                                                                                                                       
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-k_start_watchdog() {                                                                                                                                                                                         
-        # daemonize - set new session ID and redirect all outputs to /dev/null                                                                                                                               
-#       setsid                                                                                                                                                                                               
-        /opt/kerio/mailserver/kerio-connect-watchdog start $PIDFILE $NAME $EXEC $MAINDIR                                                                                                                     
-# &> /dev/null                                                                                                                                                                                               
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-# kill with active waiting 30 second                                                                                                                                                                         
-k_kill_process() {                                                                                                                                                                                           
-        local delay pid                                                                                                                                                                                      
-                                                                                                                                                                                                             
-        delay=$STOPTIMEOUT                                                                                                                                                                                   
-                                                                                                                                                                                                             
-        if [ -r $PIDFILE ]; then                                                                                                                                                                             
-                pid=$( cat $PIDFILE )                                                                                                                                                                        
-        else                                                                                                                                                                                                 
-                pid=$( pidof $NAME )                                                                                                                                                                         
-                if  [ -z "$pid" ]; then                                                                                                                                                                      
-                        # noting to kill                                                                                                                                                                     
-                        return 1                                                                                                                                                                             
-                fi                                                                                                                                                                                           
-        fi                                                                                                                                                                                                   
-                                                                                                                                                                                                             
-        if [ -d "/proc/$pid" ]; then                                                                                                                                                                         
-                # TERM first, then KILL if not dead                                                                                                                                                          
-                kill -TERM $pid >/dev/null 2>&1                                                                                                                                                              
-                sleep 1                                                                                                                                                                                      
-                while [ $delay -gt 0 ] && [ -d "/proc/$pid" ]; do                                                                                                                                            
-                        sleep $DELAY;                                                                                                                                                                        
-                        echo -n "."                                                                                                                                                                          
-                        delay=$(( $delay - $DELAY ))                                                                                                                                                         
-                done                                                                                                                                                                                         
-                if [ -d "/proc/$pid" ]; then                                                                                                                                                                 
-                        kill -KILL $pid >/dev/null 2>&1                                                                                                                                                      
-                fi                                                                                                                                                                                           
-                sleep 1                                                                                                                                                                                      
-                [ -d "/proc/$pid" ] && return 1 || return 0                                                                                                                                                  
-        fi                                                                                                                                                                                                   
-        return 1                                                                                                                                                                                             
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-k_status_service() {                                                                                                                                                                                         
-        [ $(pidof $NAME) ] \                                                                                                                                                                                 
-                && k_log_success_msg "$DESC is running." \                                                                                                                                                   
-                || k_log_failure_msg "$DESC is not running."                                                                                                                                                 
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-k_start_service() {                                                                                                                                                                                          
-        if [ ! -x $EXEC ];then                                                                                                                                                                               
-                k_log_failure_msg "You need root access. Did you mean 'sudo service kerio-connect start'."                                                                                                   
-                exit 1                                                                                                                                                                                       
-        fi                                                                                                                                                                                                   
-                                                                                                                                                                                                             
-        if [ -n "`pidof $NAME`" ]; then                                                                                                                                                                      
-                if [ -e $PIDFILE ]; then                                                                                                                                                                     
-                        k_log_success_msg "$DESC is already running"                                                                                                                                         
-                else                                                                                                                                                                                         
-                        k_log_success_msg "$DESC is already starting or shutting down."                                                                                                                      
-                fi                                                                                                                                                                                           
-                return 2                                                                                                                                                                                     
-        fi                                                                                                                                                                                                   
-                                                                                                                                                                                                             
-        k_pidfileclean                                                                                                                                                                                       
-        ulimit -c unlimited                                                                                                                                                                                  
-        ulimit -s 2048                                                                                                                                                                                       
-        ulimit -n 10240                                                                                                                                                                                      
-        $EXEC $MAINDIR                                                                                                                                                                                       
-        RETVAL=$?                                                                                                                                                                                            
-        if [ $RETVAL -eq 0 ]; then                                                                                                                                                                           
-                # Waiting to complete start                                                                                                                                                                  
-                k_wait_until_start                                                                                                                                                                           
-                RETVAL=$?                                                                                                                                                                                    
-        fi                                                                                                                                                                                                   
-        if [ $RETVAL -eq 0 ]; then                                                                                                                                                                           
-                k_log_success_msg "Starting $DESC"                                                                                                                                                           
-                                                                                                                                                                                                             
-                # cond restart only on supported Linuxes                                                                                                                                                     
-                if [ -d /var/lock/subsys ]; then                                                                                                                                                             
-                        touch /var/lock/subsys/kerio-connect                                                                                                                                                 
-                fi                                                                                                                                                                                           
-        else                                                                                                                                                                                                 
-                k_log_failure_msg "Starting $DESC"                                                                                                                                                           
-        fi                                                                                                                                                                                                   
-                                                                                                                                                                                                             
-        k_start_watchdog                                                                                                                                                                                     
-        return $RETVAL                                                                                                                                                                                       
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-k_stop_service() {                                                                                                                                                                                           
-        if [ ! -x $EXEC ];then                                                                                                                                                                               
-                k_log_failure_msg "You need root access. Did you mean 'sudo service kerio-connect stop'."                                                                                                    
-                exit 1                                                                                                                                                                                       
-        fi                                                                                                                                                                                                   
-                                                                                                                                                                                                             
-        if [ $(pidof $NAME) ]; then                                                                                                                                                                          
-                /opt/kerio/mailserver/kerio-connect-watchdog stop                                                                                                                                            
-                k_pidfileclean                                                                                                                                                                               
-                echo -n "Waiting for shutting down $DESC ."                                                                                                                                                  
-                # We can't use 'killproc -p $PIDFILE -d 30 $NAME' therefore this function                                                                                                                    
-                # don't waiting active. Function simply try again after -d second.                                                                                                                           
-                k_kill_process                                                                                                                                                                               
-                RETVAL=$?                                                                                                                                                                                    
-                echo                                                                                                                                                                                         
-                if [ $RETVAL -eq 0 ]; then                                                                                                                                                                   
-                        k_log_success_msg "Stopping $DESC"                                                                                                                                                   
-                                                                                                                                                                                                             
-                        [ -e /var/lock/subsys/kerio-connect ] && rm -f /var/lock/subsys/kerio-connect                                                                                                        
-                else                                                                                                                                                                                         
-                        k_log_failure_msg "Stopping $DESC"                                                                                                                                                   
-                fi                                                                                                                                                                                           
-                return $RETVAL                                                                                                                                                                               
-        fi                                                                                                                                                                                                   
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-k_restart_service() {                                                                                                                                                                                        
-        if [ ! -x $EXEC ];then                                                                                                                                                                               
-                k_log_failure_msg "You need root access. Did you mean 'sudo service kerio-connect restart'."                                                                                                 
-                exit 1                                                                                                                                                                                       
-        fi                                                                                                                                                                                                   
-                                                                                                                                                                                                             
-        k_stop_service                                                                                                                                                                                       
-        sleep 1                                                                                                                                                                                              
-        k_start_service                                                                                                                                                                                      
-}                                                                                                                                                                                                            
-                                                                                                                                                                                                             
-                                                                                                                                                                                                             
-case "$1" in                                                                                                                                                                                                 
-        start)                                                                                                                                                                                               
-                k_start_service                                                                                                                                                                              
-                ;;                                                                                                                                                                                           
-        stop)                                                                                                                                                                                                
-                k_stop_service                                                                                                                                                                               
-                ;;                                                                                                                                                                                           
-        reload|force-reload|restart)                                                                                                                                                                         
-                k_restart_service                                                                                                                                                                            
-                ;;                                                                                                                                                                                           
-        condrestart)                                                                                                                                                                                         
-                if [ -f /var/lock/subsys/kerio-connect ]; then                                                                                                                                               
-                        k_restart_service                                                                                                                                                                    
-                fi                                                                                                                                                                                           
-                ;;                                                                                                                                                                                           
-        status)                                                                                                                                                                                              
-                k_status_service                                                                                                                                                                             
-                ;;                                                                                                                                                                                           
-        *)                                                                                                                                                                                                   
-                echo "Usage: sudo service kerio-connect {start|stop|restart|reload|force-reload|condrestart|status}"                                                                                         
-                exit 2                                                                                                                                                                                       
-esac                                                                                                                                                                                                         
-                                                                                                                                                                                                             
+#!/bin/sh
+### entry for chkconfig on Redhat and Debian or for sysv-rc-conf on Ubuntu.
+### RPM instalator uses it 
+#
+# kerio-connectScript to start and stop Kerio Connect
+#
+# chkconfig: 2345 79 30
+# description: Kerio Connect 
+# processname: mailserver
+# pidfile: /var/run/kms.pid
+#
+### entry for update-rc.d on Debian and Ubuntu 
+### DEB instalator uses it 
+#
+### BEGIN INIT INFO
+# Provides: kerio-connect mail-transport-agent 
+# Required-Start: $local_fs $network $time 
+# Required-Stop: $local_fs $network $time
+# Default-Start: 2 3 4 5 
+# Default-Stop: 0 1 6
+# Short-Description: Script to start and stop Kerio Connect
+### END INIT INFO
+ 
+ 
+DESC="Kerio Connect" # this name is write to console 
+MAINDIR=/opt/kerio/mailserver# pwd 
+NAME=mailserver# processname 
+PIDFILE=/var/run/kms.pid # pidfile 
+DELAY=4# delay in active waiting (in start and stop) 
+STARTTIMEOUT=30# max waiting on start (second) 
+STOPTIMEOUT=300# max waiting on stop (second), 300s is recommend minimun 
+EXEC=$MAINDIR/$NAME
+ 
+INIT_FUNCTIONS=
+if [ -f /lib/lsb/init-functions ]; then
+. /lib/lsb/init-functions
+INIT_FUNCTIONS=lsb 
+elif [ -f /etc/rc.d/init.d/functions ]; then 
+. /etc/rc.d/init.d/functions 
+INIT_FUNCTIONS=rhel
+else 
+. /lib/lsb/init-functions
+fi 
+ 
+# Make sure Kerio Connect is started with system locale
+if [ -r /etc/default/locale ]; then # ubuntu|debian
+. /etc/default/locale
+export LANG
+export LC_ALL=$LANG
+elif [ -r /etc/sysconfig/i18n ]; then # CentOS 
+. /etc/sysconfig/i18n
+export LANG
+fi 
+ 
+unset DISTRIB_ID 
+[ -r /etc/lsb-release ] && . /etc/lsb-release
+ 
+ 
+k_log_success_msg() {
+if [ "$INIT_FUNCTIONS" = "rhel" ]; then
+echo -n "$@" 
+success
+echo 
+else 
+log_success_msg $@ 
+fi 
+}
+ 
+k_log_failure_msg() {
+if [ "$INIT_FUNCTIONS" = "rhel" ]; then
+echo -n "$@" 
+failure
+echo 
+else 
+log_failure_msg $@ 
+fi 
+}
+ 
+# Remove pidfile if process is no longer running (probably crashed)
+k_pidfileclean() { 
+if [ -z "`pidof $NAME`" ] && [ -e $PIDFILE ]; then 
+rm -f $PIDFILE 
+echo 
+fi 
+}
+ 
+# Waiting to complete start
+k_wait_until_start() { 
+local delay
+ 
+sleep 1 # min waiting
+delay=$STOPTIMEOUT 
+while [ $delay -gt 0 ] && [ -n "`pidof $NAME`" ] && [ ! -e $PIDFILE ]; do
+sleep $DELAY 
+delay=$(( $delay - $DELAY )) 
+done 
+[ -z "`pidof $NAME`" ] && return 1 || return 0 
+}
+ 
+k_start_watchdog() { 
+# daemonize - set new session ID and redirect all outputs to /dev/null 
+# setsid 
+/opt/kerio/mailserver/kerio-connect-watchdog start $PIDFILE $NAME $EXEC $MAINDIR 
+# &> /dev/null 
+}
+ 
+# kill with active waiting 30 second 
+k_kill_process() { 
+local delay pid
+ 
+delay=$STOPTIMEOUT 
+ 
+if [ -r $PIDFILE ]; then 
+pid=$( cat $PIDFILE )
+else 
+pid=$( pidof $NAME ) 
+if[ -z "$pid" ]; then
+# noting to kill 
+return 1 
+fi 
+fi 
+ 
+if [ -d "/proc/$pid" ]; then 
+# TERM first, then KILL if not dead
+kill -TERM $pid >/dev/null 2>&1
+sleep 1
+while [ $delay -gt 0 ] && [ -d "/proc/$pid" ]; do
+sleep $DELAY;
+echo -n "."
+delay=$(( $delay - $DELAY )) 
+done 
+if [ -d "/proc/$pid" ]; then 
+kill -KILL $pid >/dev/null 2>&1
+fi 
+sleep 1
+[ -d "/proc/$pid" ] && return 1 || return 0
+fi 
+return 1 
+}
+ 
+k_status_service() { 
+[ $(pidof $NAME) ] \ 
+&& k_log_success_msg "$DESC is running." \ 
+|| k_log_failure_msg "$DESC is not running." 
+}
+ 
+k_start_service() {
+if [ ! -x $EXEC ];then 
+k_log_failure_msg "You need root access. Did you mean 'sudo service kerio-connect start'." 
+exit 1 
+fi 
+ 
+if [ -n "`pidof $NAME`" ]; then
+if [ -e $PIDFILE ]; then 
+k_log_success_msg "$DESC is already running" 
+else 
+k_log_success_msg "$DESC is already starting or shutting down."
+fi 
+return 2 
+fi 
+ 
+k_pidfileclean 
+ulimit -c unlimited
+ulimit -s 2048 
+ulimit -n 10240
+$EXEC $MAINDIR 
+RETVAL=$?
+if [ $RETVAL -eq 0 ]; then 
+# Waiting to complete start
+k_wait_until_start 
+RETVAL=$?
+fi 
+if [ $RETVAL -eq 0 ]; then 
+k_log_success_msg "Starting $DESC" 
+ 
+# cond restart only on supported Linuxes 
+if [ -d /var/lock/subsys ]; then 
+touch /var/lock/subsys/kerio-connect 
+fi 
+else 
+k_log_failure_msg "Starting $DESC" 
+fi 
+ 
+k_start_watchdog 
+return $RETVAL 
+}
+ 
+k_stop_service() { 
+if [ ! -x $EXEC ];then 
+k_log_failure_msg "You need root access. Did you mean 'sudo service kerio-connect stop'."
+exit 1 
+fi 
+ 
+if [ $(pidof $NAME) ]; then
+/opt/kerio/mailserver/kerio-connect-watchdog stop
+k_pidfileclean 
+echo -n "Waiting for shutting down $DESC ."
+# We can't use 'killproc -p $PIDFILE -d 30 $NAME' therefore this function
+# don't waiting active. Function simply try again after -d second. 
+k_kill_process 
+RETVAL=$?
+echo 
+if [ $RETVAL -eq 0 ]; then 
+k_log_success_msg "Stopping $DESC" 
+ 
+[ -e /var/lock/subsys/kerio-connect ] && rm -f /var/lock/subsys/kerio-connect
+else 
+k_log_failure_msg "Stopping $DESC" 
+fi 
+return $RETVAL 
+fi 
+}
+ 
+k_restart_service() {
+if [ ! -x $EXEC ];then 
+k_log_failure_msg "You need root access. Did you mean 'sudo service kerio-connect restart'." 
+exit 1 
+fi 
+ 
+k_stop_service 
+sleep 1
+k_start_service
+}
+ 
+ 
+case "$1" in 
+start) 
+k_start_service
+;; 
+stop)
+k_stop_service 
+;; 
+reload|force-reload|restart) 
+k_restart_service
+;; 
+condrestart) 
+if [ -f /var/lock/subsys/kerio-connect ]; then 
+k_restart_service
+fi 
+;; 
+status)
+k_status_service 
+;; 
+*) 
+echo "Usage: sudo service kerio-connect {start|stop|restart|reload|force-reload|condrestart|status}" 
+exit 2 
+esac 
+ 
 exit $?
