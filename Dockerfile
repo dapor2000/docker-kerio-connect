@@ -27,7 +27,7 @@ COPY /etc/supervisor/conf.d/supervisord.conf  /etc/supervisor/conf.d/supervisord
 RUN chmod +x /tmp/sleep.sh                                                                                                                                                                                   
 RUN echo "/tmp/sleep.sh" >> /run_kerio.sh                                                                                                                                                                    
                                                                                                                                                                                                              
-#RUN chmod +x /run_kerio.sh                                                                                                                                                                                   
+RUN chmod +x /run_kerio.sh                                                                                                                                                                                   
 RUN chmod +x /kerio-restore.sh                                                                                                                                                                               
 ##################### INSTALLATION END #####################                                                                                                                                                 
 # Expose the default port  only 4040 is nessecary for admin access                                                                                                                                           
