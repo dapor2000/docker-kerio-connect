@@ -20,6 +20,8 @@ RUN dpkg -i kerio-connect-linux-64bit.deb
 RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh                                                                                                                                    
 RUN echo "/opt/kerio/mailserver/mailserver /opt/kerio/mailserver" >> /run_kerio.sh          
 RUN locale-gen en_US.utf8
+RUN useradd docker -d /home/docker -g users -G sudo -m                                                                                                                    
+RUN echo docker:test123 | chpasswd
 COPY sleep.sh /tmp/                                                                                                                                                                                          
 RUN chmod +x /tmp/sleep.sh                                                                                                                                                                                   
 RUN echo "/tmp/sleep.sh" >> /run_kerio.sh                                                                                                                                                                    
