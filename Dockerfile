@@ -12,7 +12,7 @@ MAINTAINER Frank Wagener <docker@dapor.de>
 RUN apt-get update -q
 RUN apt-get upgrade -qy
 RUN apt-get install lsof sysstat wget openssh-server supervisor -qy 
-RUN echo "wget http://cdn.kerio.com/dwn/connect/connect-8.5.0-4416/kerio-connect-8.5.0-4416-linux-amd64.deb" > dl.sh
+RUN echo "RUN echo "wget -o kerio-connect-linux-64bit.deb http://cdn.kerio.com/dwn/connect/connect-8.5.0-4416/kerio-connect-8.5.0-4416-linux-amd64.deb > dl.sh
 RUN chmod +x dl.sh 
 RUN ./dl.sh
 ################## BEGIN INSTALLATION #########################
