@@ -20,6 +20,7 @@ RUN dpkg -i kerio-connect-linux-64bit.deb
 RUN ulimit -c unlimited 
 RUN ulimit -s 2048 
 RUN ulimit -n 10240
+RUN echo "/etc/init.d/kerio-connect stop" >> /kerio-restore.sh 
 RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh 
 RUN mkdir -p /var/log/supervisord
 RUN mkdir -p /var/run/sshd
