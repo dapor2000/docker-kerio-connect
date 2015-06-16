@@ -16,7 +16,7 @@ RUN echo "wget http://cdn.kerio.com/dwn/connect/connect-8.5.0-4416/kerio-connect
 RUN chmod +x dl.sh 
 RUN ./dl.sh
 ################## BEGIN INSTALLATION #########################
-RUN dpkg -i kerio-connect-linux-64bit.deb
+RUN dpkg -i kerio-connect-*linux-64bit.deb
 RUN ulimit -c unlimited 
 RUN ulimit -s 2048 
 RUN ulimit -n 10240
