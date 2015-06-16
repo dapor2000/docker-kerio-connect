@@ -33,7 +33,7 @@ $ sudo docker run --name="kerio" -p 4040:4040 -v /#YOUR_KERIO_BACKUP:/backup -t 
 
 https://IP-FROM-DOCKER:4040
 
-If you need to change anything inside the Container, ther is a SSH Server running with 
+If you need to change anything inside the Container, there is a SSH Server running with 
 ```
 User docker 
 Passwort test123
