@@ -39,4 +39,4 @@ VOLUME /mailserver/data
 # Set default container command                                                                                                                                                                              
 #ENTRYPOINT /opt/kerio/mailserver/mailserver /opt/kerio/mailserver                                                                                                                                           
 #ENTRYPOINT /run_kerio.sh    
-ENTRYPOINT /user/bin/supervisord -c /etc/supervisor/conf.d/supervisor.conf
+ENTRYPOINT /user/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
