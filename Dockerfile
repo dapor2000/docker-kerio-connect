@@ -23,9 +23,9 @@ RUN ulimit -n 10240
 RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh                                                                                                       
 RUN mkdir -p /var/log/supervisord    
 RUN mkdir -p /var/run/sshd
-COPY /etc/supervisor/conf.d/supervisord.conf  /etc/supervisor/conf.d/supervisord.conf 
-                                                                                                                                                                               
-                                                                                                                                                                                                             
+ADD /etc/supervisor/conf.d/supervisord.conf  /etc/supervisor/conf.d/supervisord.conf 
+ADD /etc/init.d/kerio-connect  /etc/init.d/kerio-connect                                                                                                                                                                               
+RUN chmod +x /etc/init.d/kerio-connect                                                                                                                                                                                                              
 RUN chmod +x /kerio-restore.sh                                                                                                                                                                               
 ##################### INSTALLATION END #####################                                                                                                                                                 
 # Expose the default port  only 4040 is nessecary for admin access                                                                                                                                           
