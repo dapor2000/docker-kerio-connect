@@ -12,11 +12,11 @@ MAINTAINER Frank Wagener <docker@dapor.de>
 RUN apt-get update -q                                                                                                                                                                                        
 RUN apt-get upgrade -qy                                                                                                                                                                                      
 RUN apt-get install lsof sysstat wget  -qy                                                                                                                                                                   
-RUN echo "wget http://cdn.kerio.com/dwn/connect/connect-8.5.0-4416/kerio-connect-8.5.0-4416-linux-amd64.deb" > dl.sh                                                                                                                          
+RUN echo "wget -o kerio-connect-linux-64bit.deb http://cdn.kerio.com/dwn/connect/connect-8.5.0-4416/kerio-connect-8.5.0-4416-linux-amd64.deb" > dl.sh                                                                                                                          
 RUN chmod +x dl.sh                                                                                                                                                                                           
 RUN ./dl.sh                                                                                                                                                                                                  
 ################## BEGIN INSTALLATION #########################                                                                                                                                              
-RUN dpkg -i kerio-connect-*linux-64bit.deb    
+RUN dpkg -i kerio-connect-linux-64bit.deb    
 RUN echo "/etc/init.d/kerio-connect stop" >> /kerio-restore.sh 
 RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh                                                                                                                                    
 RUN echo "/opt/kerio/mailserver/mailserver /opt/kerio/mailserver" >> /run_kerio.sh          
