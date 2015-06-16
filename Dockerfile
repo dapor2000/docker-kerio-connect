@@ -27,14 +27,14 @@ RUN mkdir -p /var/run/sshd
 RUN locale-gen en_US.utf8
 RUN useradd docker -d /home/docker -g users -G sudo -m                                                                                                                    
 RUN echo docker:test123 | chpasswd
-ADD /etc/supervisor/conf.d/supervisord.conf/etc/supervisor/conf.d/supervisord.conf 
+ADD /etc/supervisor/conf.d/supervisord.conf /etc/supervisor/conf.d/supervisord.conf 
 ADD /etc/init.d/kerio-connect /etc/init.d/kerio-connect 
 RUN chmod +x /etc/init.d/kerio-connect
 RUN chmod +x /kerio-restore.sh 
 ##################### INSTALLATION END ##################### 
 # Expose the default portonly 4040 is nessecary for admin access 
  
-EXPOSE 404025 465 587 110 995 143 993 119 563 389 636 80 443 5222 5223 
+EXPOSE 4040 22 25 465 587 110 995 143 993 119 563 389 636 80 443 5222 5223 
  
 VOLUME /backup
 VOLUME /mailserver/data 
