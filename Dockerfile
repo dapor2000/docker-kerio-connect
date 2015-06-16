@@ -17,9 +17,9 @@ RUN chmod +x dl.sh
 RUN ./dl.sh                                                                                                                                                                                                  
 ################## BEGIN INSTALLATION #########################                                                                                                                                              
 RUN dpkg -i kerio-connect-linux-64bit.deb                                                                                                                                                                    
-#RUN echo "ulimit -c unlimited"  > /run_kerio.sh                                                                                                                                                             
-#RUN echo "ulimit -s 2048 "   >> /run_kerio.sh                                                                                                                                                               
-#RUN echo "ulimit -n 10240" >> /run_kerio.sh  
+RUN echo "ulimit -c unlimited"  > /run_kerio.sh                                                                                                                                                             
+RUN echo "ulimit -s 2048 "   >> /run_kerio.sh                                                                                                                                                               
+RUN echo "ulimit -n 10240" >> /run_kerio.sh  
 RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh                                                                                                                                    
 RUN echo "/opt/kerio/mailserver/mailserver /opt/kerio/mailserver" >> /run_kerio.sh                                                                                                                           
 COPY sleep.sh /tmp/      
