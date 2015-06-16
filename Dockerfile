@@ -21,7 +21,8 @@ RUN ulimit -c unlimited
 RUN ulimit -s 2048                                                                                                                                                             
 RUN ulimit -n 10240
 RUN echo "/opt/kerio/mailserver/kmsrecover /backup/" >> /kerio-restore.sh                                                                                                       
-    
+RUN mkdir -p /var/log/supervisord    
+RUN mkdir -p /var/run/sshd
 COPY /etc/supervisor/conf.d/supervisord.conf  /etc/supervisor/conf.d/supervisord.conf 
                                                                                                                                                                                
                                                                                                                                                                                                              
