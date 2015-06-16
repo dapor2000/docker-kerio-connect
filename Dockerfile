@@ -11,7 +11,7 @@ MAINTAINER Frank Wagener <docker@dapor.de>
 # Update the repository sources list                                                                                                                                                                         
 RUN apt-get update -q                                                                                                                                                                                        
 RUN apt-get upgrade -qy                                                                                                                                                                                      
-RUN apt-get install lsof sysstat wget openssh-server supervisord -qy                                                                                                                                                                   
+RUN apt-get install lsof sysstat wget openssh-server supervisor -qy                                                                                                                                                                   
 RUN echo "wget http://download.kerio.com/dwn/kerio-connect-linux-64bit.deb" > dl.sh                                                                                                                          
 RUN chmod +x dl.sh                                                                                                                                                                                           
 RUN ./dl.sh                                                                                                                                                                                                  
