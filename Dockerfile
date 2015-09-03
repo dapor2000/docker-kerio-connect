@@ -6,13 +6,13 @@ FROM ubuntu:14.04
  
 # File Author / Maintainer 
 MAINTAINER Frank Wagener <docker@dapor.de> 
- 
+#VERSION kerio-connect-8.5.2-4957
  
 # Update the repository sources list 
 RUN apt-get update -q
 RUN apt-get upgrade -qy
 RUN apt-get install lsof sysstat wget openssh-server supervisor -qy 
-RUN echo "wget -O kerio-connect-linux-64bit.deb http://download.kerio.com/dwn/kerio-connect-linux-64bit.deb" > dl.sh
+RUN echo "wget -O kerio-connect-linux-64bit.deb http://cdn.kerio.com/dwn/connect/connect-8.5.2-4957/kerio-connect-8.5.2-4957-linux-amd64.deb" > dl.sh
 RUN chmod +x dl.sh 
 RUN ./dl.sh
 ################## BEGIN INSTALLATION #########################
