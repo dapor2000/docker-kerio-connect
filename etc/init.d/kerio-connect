@@ -114,7 +114,7 @@ if [ -r $PIDFILE ]; then
 pid=$( cat $PIDFILE )
 else 
 pid=$( pidof $NAME ) 
-if[ -z "$pid" ]; then
+if [ -z "$pid" ]; then
 # noting to kill 
 return 1 
 fi 
