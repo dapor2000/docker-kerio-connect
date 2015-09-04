@@ -23,12 +23,12 @@
  
  
 DESC="Kerio Connect" # this name is write to console 
-MAINDIR=/opt/kerio/mailserver# pwd 
-NAME=mailserver# processname 
+MAINDIR=/opt/kerio/mailserver # pwd 
+NAME=mailserver # processname 
 PIDFILE=/var/run/kms.pid # pidfile 
-DELAY=4# delay in active waiting (in start and stop) 
-STARTTIMEOUT=30# max waiting on start (second) 
-STOPTIMEOUT=300# max waiting on stop (second), 300s is recommend minimun 
+DELAY=4 # delay in active waiting (in start and stop) 
+STARTTIMEOUT=30 # max waiting on start (second) 
+STOPTIMEOUT=300 # max waiting on stop (second), 300s is recommend minimun 
 EXEC=$MAINDIR/$NAME
  
 INIT_FUNCTIONS=
@@ -139,9 +139,7 @@ return 1
 }
  
 k_status_service() { 
-[ $(pidof $NAME) ] \ 
-&& k_log_success_msg "$DESC is running." \ 
-|| k_log_failure_msg "$DESC is not running." 
+[ $(pidof $NAME) ] && k_log_success_msg "$DESC is running." || k_log_failure_msg "$DESC is not running." 
 }
  
 k_start_service() {
