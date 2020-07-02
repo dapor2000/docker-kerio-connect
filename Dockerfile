@@ -2,7 +2,7 @@
 ############################################################ 
  
 # Set the base image to Ubuntu 
-FROM ubuntu:16.04
+FROM ubuntu:20.04
  
 # File Author / Maintainer 
 MAINTAINER Frank Wagener <docker@dapor.de> 
